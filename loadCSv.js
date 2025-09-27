@@ -25,17 +25,23 @@ export function loadCSV(file, table, columns, separator = ",") {
 
     const rows = [];
 
-    fs.createReadStream(file)
-        .pipe(csvParser({ separator }))
-        .on("data", (row) => {
-            rows.push(row);
-            console.log(row);
-        })
-        .on("end", () => {
-            insertMany(rows);
-            console.log(`${file} is uploaded to table ${table}`);
-            db.close();
-        });
-
+    return new Promise((resolve, reject) => {
+        fs.createReadStream(file)
+            .pipe(csvParser({ separator }))
+            .on("data", (row) => {
+                rows.push(row);
+                //console.log(row);
+            })
+            .on("end", () => {
+                insertMany(rows);
+                console.log(`${file} is uploaded to table ${table}`);
+                db.close();
+                resolve();
+            })
+            .on("error", (err) => {
+                reject(err);
+                db.close();
+            })
+    });
 }
 
