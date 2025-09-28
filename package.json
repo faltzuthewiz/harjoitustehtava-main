@@ -21,6 +21,7 @@
   "homepage": "https://github.com/faltzuthewiz/harjoitustehtava-main#readme",
   "dependencies": {
     "better-sqlite3": "^12.4.1",
-    "csv-parser": "^3.2.0"
+    "csv-parser": "^3.2.0",
+    "csv-writer": "^1.6.0"
   }
 }

@@ -6,10 +6,14 @@ export function calculateOrders(taxData) {
     // Get orders
     const rows = db.prepare("SELECT * FROM orders").all();
 
-    rows.forEach(row => {
-        //console.log(`Order ID: ${row.order_id}, Customer ID: ${row.customer_id}`);
+    const resultsMap = new Map();
 
-        let orderLines = db.prepare("SELECT ol.sku, ol.qty FROM order_lines ol WHERE ol.order_id= ?").all(row.order_id);
+    rows.forEach(row => {
+
+        let orderLines = db.prepare("SELECT ol.sku, ol.qty FROM order_lines ol WHERE ol.order_id = ?").all(row.order_id);
+        let customerNameRow = db.prepare("SELECT c.customer_name FROM customers c WHERE c.customer_id = ?").get(row.customer_id);
+
+        let customerName = customerNameRow.customer_name;
 
         //console.log(orderLines);
 
@@ -48,11 +52,9 @@ export function calculateOrders(taxData) {
             let vatLineTotal = lineTotal * vat;
 
             vatTotal += vatLineTotal;
-            vatTotal = Math.round(vatTotal * 100) / 100;
 
             //console.log("Vatlinetotal is " + vatLineTotal);
             //console.log("VAT TOTAL is " + vatTotal);
-
 
             // Calculate gross total
             grossTotal = netTotal + vatTotal;
@@ -73,11 +75,27 @@ export function calculateOrders(taxData) {
             if (itemInStock === false) {
                 fullyInStock = false;
             }
+
+            let fullyInStockText = fullyInStock ? "YES" : "NO";
+
             // console.log("Fully in stock: " + fullyInStock);
+
+            // Saves results to map by order_id
+            resultsMap.set(row.order_id, {
+                orderId: row.order_id,
+                customerName: customerName,
+                netTotal: Number(netTotal.toFixed(2)),
+                vatTotal: Number(vatTotal.toFixed(2)),
+                grossTotal: Number(grossTotal.toFixed(2)),
+                isFullyInStock: fullyInStockText
+            })
         });
     })
     console.log("Calculated net total, VAT, gross total & checked if the order is fully in stock");
     db.close();
 
-}
+    const results = Array.from(resultsMap.values());
 
+    return results;
+
+}
