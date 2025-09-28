@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import fs from "fs";
 
-function createDB() {
+export function createDB() {
     const db = new Database("orderdata.db");
 
     const schema = fs.readFileSync("db-schema.sql", "utf-8");
@@ -12,5 +12,3 @@ function createDB() {
 
     db.close();
 }
-
-createDB();
