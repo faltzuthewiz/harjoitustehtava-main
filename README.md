@@ -26,3 +26,11 @@ Saat harjoituksen mukana seuraavat tiedostot:
 - `orders.csv`
 - `order_lines.csv`
 - `tax_rules.json`
+
+## Ohjeet ohjelman käyttämiseksi
+- Asenna tarvittavat riippuvuudet komennolla "npm i"
+- Käynnistä ohjelma komennolla "npm start"
+- Valmis raportti tulostuu tiedostoon "order_report.csv".
+
+## Tunnettuja ongelmia
+- Mikäli ohjelma suoritetaan useaan kertaan, tietokanta (orderdata.db) tulee poistaa manuaalisesti ennen uutta suoritusta. ()

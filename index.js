@@ -1,9 +1,15 @@
+import { createDB } from "./createdb.js";
 import { loadCSV } from "./loadCSv.js";
 import { calculateOrders } from "./calculateOrders.js";
 import fs from "fs";
 import { writeCSV } from "./writeCSV.js";
 
 async function main() {
+    // Initializing
+    console.log("*** Sales data program *** ")
+    console.log("");
+    createDB();
+
     // Step 1: load CSV files and update them to database
     await loadCSV("customers.csv", "customers", ["customer_id", "customer_name"]);
     await loadCSV("products.csv", "products", ["sku", "name", "unit_price", "vat_code", "reorder_point"]);
@@ -26,8 +32,10 @@ async function main() {
     const orders = calculateOrders(taxData);
 
     // Step 4: export CSV
-    writeCSV(orders);
+    await writeCSV(orders);
 
+    console.log("");
+    console.log("*** Sales data program ended ***");
 }
 
 main();

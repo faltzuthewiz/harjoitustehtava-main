@@ -14,7 +14,7 @@ export function writeCSV(orders) {
         ]
     });
 
-    csvWriter.writeRecords(orders)
+    return csvWriter.writeRecords(orders)
         .then(() => {
             console.log('...order_report.csv exported.');
         });
